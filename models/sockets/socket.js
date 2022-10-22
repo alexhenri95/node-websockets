@@ -18,13 +18,17 @@ const socketController = client => {
         
         client.broadcast.to(data.sala).emit('actualizar-lista-usuarios-conectados', usuarios.getPersonasPorSala(data.sala))
 
+        client.broadcast.to(data.sala).emit('notificar-usuario', crearMensaje('Administrador', `${data.nombre} se unió a la sala.`))
+
         return callback(usuarios.getPersonasPorSala(data.sala))
     })
 
-    client.on('notificar-usuario', (data) => {
+    client.on('notificar-usuario', (data, callback) => {
         let persona = usuarios.getPersona(client.id)
         let mensaje = crearMensaje( persona.nombre, data.mensaje )
         client.broadcast.to(persona.sala).emit('notificar-usuario', mensaje)
+        
+        return callback(mensaje)
     })
 
     client.on('mensaje-privado', data => {

@@ -1,7 +1,7 @@
 const socket = io()
 
 
-const params = new URLSearchParams( window.location.search )
+// const params = new URLSearchParams( window.location.search )
 
 if (!params.has('nombre') || !params.has('sala')) {
     window.location = 'index.html'
@@ -15,20 +15,23 @@ const usuario = {
 
 
 socket.on('connect', () => {
-    console.log('Conectando al servidor');
     socket.emit('ingresando-chat', usuario, (resp) => {
-        console.log('Usuarios conectados: ', resp)
+        // console.log('Usuarios conectados: ', resp)
+        renderizarUsuarios(resp)
     } )
 })
 
 
 socket.on('notificar-usuario', (resp) => {
-    console.log('Desde servidor', resp);
+    // console.log('Desde servidor', resp);
+    renderizarMensajes(resp)
+    scrollBottom()
 })
 
 
 socket.on('actualizar-lista-usuarios-conectados', (resp) => {
-    console.log(resp);
+    // console.log(resp);
+    renderizarUsuarios(resp)
 })
 
 
